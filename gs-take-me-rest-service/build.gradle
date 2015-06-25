@@ -1,25 +1,25 @@
 buildscript {
-
-    repositories {
+    repositories {  
         mavenCentral()
     }
-    
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.4.RELEASE")
     }
 }
 
 apply plugin: 'java'
-apply plugin: 'eclipse'
 apply plugin: 'idea'
 apply plugin: 'spring-boot'
-apply plugin: 'maven'
-apply plugin: 'application'
+apply plugin: 'war'
+apply plugin: 'eclipse-wtp'
 
-mainClassName = 'app.Application'
+war {
+    baseName = 'gs-take-me-rest-service'
+    version =  '0.1.0'
+}
 
 jar {
-    baseName = 'gs-rest-service'
+    baseName = 'gs-take-me-rest-service'
     version =  '0.1.0'
 }
 
@@ -30,11 +30,20 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+configurations {
+    providedRuntime
+}
+
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.security:spring-security-core")	
+    compile("org.springframework.security:spring-security-config")
+    providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
     compile("mysql:mysql-connector-java")
     compile("org.hibernate:hibernate-core")
+    compile("javax.inject:javax.inject:1")
     testCompile("junit:junit")
 }
 
