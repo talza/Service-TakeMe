@@ -42,13 +42,14 @@ public class ExampleResource
     	if(name != null && 
     	   name != "" )
 	    {
-    //		list = exampleRepository.findByName(name);
+    		list = exampleRepository.findByName(name);
 	    }
     	else
     	{
-    	//	list = exampleRepository.findAll();
+    		list = exampleRepository.findAll();
     	}
     	System.out.println("Rest service :" + name);
+    	
         return list;
     }
 

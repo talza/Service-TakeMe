@@ -7,7 +7,7 @@ import javax.persistence.Table;
 @Table(name="Example")
 public class ExampleEntity extends BaseEntity<Long>
 {
-	
+
 	String name;
 
 	public String getName() {
@@ -17,5 +17,5 @@ public class ExampleEntity extends BaseEntity<Long>
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 }
