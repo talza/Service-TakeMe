@@ -1,6 +1,7 @@
 package entities;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -13,7 +14,16 @@ public class UserEntity extends BaseEntity<Long>
 	String password;
 	String email;
 	
+	@OneToOne(mappedBy="userEntity")
+	TokenEntity tokenEntity;
 	
+	public UserEntity() {}
+	
+	public UserEntity(String fullName) {
+		super();
+		this.fullName = fullName;
+	}
+
 	public String getPhoneNumber() {
 		return phoneNumber;
 	}

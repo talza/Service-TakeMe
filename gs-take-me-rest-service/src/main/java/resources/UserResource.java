@@ -1,64 +1,43 @@
 package resources;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import api.SignInRequestEntity;
 import entities.ExampleEntity;
-import repositories.ExampleRepository;
+import entities.UserEntity;
+import repositories.UserRepository;
 
 
 @RestController
-public class ExampleResource
+@RequestMapping(value="/user")
+public class UserResource
 {
 	
 	@Autowired
-	ExampleRepository exampleRepository;
+	UserRepository userRepository;
 		
-    @RequestMapping(value="/Example", 
-    		        method = RequestMethod.GET, 
-    		        produces = "application/json;charset=utf-8",
-    		        consumes="application/json;charset=utf-8")
-    @ResponseBody
-    public Iterable<ExampleEntity> findAll(@RequestParam(value="name", required=false, defaultValue="World") String name) 
-    {	
-    	Iterable<ExampleEntity> list = null;
-    	
-    	if(exampleRepository != null )
-    	{
-    		System.out.println("Hello Repository!!");
-    		
-    	}
-    	
-    	if(name != null && 
-    	   name != "" )
-	    {
-    		list = exampleRepository.findByName(name);
-	    }
-    	else
-    	{
-    		list = exampleRepository.findAll();
-    	}
-    	System.out.println("Rest service :" + name);
-    	
-        return list;
-    }
-
-    @RequestMapping(value="/Example/{id}", 
-	        method = RequestMethod.GET, 
+    @RequestMapping(value="/signIn", 
+	        method = RequestMethod.POST, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public ExampleEntity findByID(@PathVariable("id") Long id) 
+	public UserEntity signIn(@RequestBody SignInRequestEntity signInRequestEntity) 
 	{	
-	
-    //	return exampleRepository.findOne(id);
-    	return null;
+    	UserEntity user = userRepository.findByEmail(signInRequestEntity.getEmail());
+    	
+    	if (user.getPassword().equals(signInRequestEntity.getPassword())) {
+    		return user;
+    	} else {
+    		return new UserEntity("Not found");
+    	}
+    		
+    //	return userRepository.findOne(id);
+//    	return null;
 	}	    
     
     @RequestMapping(value="/Example", 
@@ -68,7 +47,7 @@ public class ExampleResource
     @ResponseBody
     public ExampleEntity create(@RequestBody ExampleEntity entity) 
     {	
-     //   return exampleRepository.save(entity);
+     //   return userRepository.save(entity);
     	return null;
     }	    
     
@@ -79,7 +58,7 @@ public class ExampleResource
     @ResponseBody
     public ExampleEntity update(@RequestBody ExampleEntity entity) 
     {	
-   //     return exampleRepository.save(entity);
+   //     return userRepository.save(entity);
     	return null;
     }	 
     
@@ -91,7 +70,7 @@ public class ExampleResource
     @ResponseBody
     public void delete(@RequestBody ExampleEntity entity) 
     {	
-        //exampleRepository.delete(entity);
+        //userRepository.delete(entity);
     }	        
 	    
  }
