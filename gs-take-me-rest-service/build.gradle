@@ -41,7 +41,7 @@ dependencies {
     compile("org.springframework.security:spring-security-core")	
     compile("org.springframework.security:spring-security-config")
     providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
-    compile("mysql:mysql-connector-java")
+    compile("postgresql:postgresql:9.1-901-1.jdbc4")
     compile("org.hibernate:hibernate-core")
     compile("javax.inject:javax.inject:1")
     testCompile("junit:junit")
