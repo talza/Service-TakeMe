@@ -1,6 +1,9 @@
 package resources;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -8,8 +11,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import api.SignInRequestEntity;
+import api.SignUpRequestEntity;
+import api.UpdateUserRequestEntity;
 import entities.ExampleEntity;
 import entities.UserEntity;
+import exceptions.UserAlreadyExistsException;
+import exceptions.UserUnauthorizedException;
 import repositories.UserRepository;
 
 
@@ -26,40 +33,54 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public UserEntity signIn(@RequestBody SignInRequestEntity signInRequestEntity) 
+	public long signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findByEmail(signInRequestEntity.getEmail());
     	
     	if (user.getPassword().equals(signInRequestEntity.getPassword())) {
-    		return user;
+    		return user.getId();
     	} else {
-    		return new UserEntity("Not found");
+    		throw new UserUnauthorizedException();
     	}
     		
     //	return userRepository.findOne(id);
-//    	return null;
 	}	    
     
-    @RequestMapping(value="/Example", 
+    @RequestMapping(value="/signUp", 
 	        method = RequestMethod.POST, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public ExampleEntity create(@RequestBody ExampleEntity entity) 
+    public long signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException 
     {	
-     //   return userRepository.save(entity);
-    	return null;
+    	UserEntity user = userRepository.findByEmail(entity.getEmail());
+    	
+    	if (user != null){
+    		throw new UserAlreadyExistsException();
+    	} else {
+    		user = new UserEntity();
+    		user.setFirstName(entity.getFirstName());
+    		user.setLastName(entity.getLastName());
+    		user.setEmail(entity.getEmail());
+    		user.setPhoneNumber(entity.getPhoneNumber());
+    		user.setPassword(entity.getPassword());
+    		return userRepository.save(user).getId();
+    	}
     }	    
     
-    @RequestMapping(value="/Example", 
+    @RequestMapping(value="/Update/{id}", 
 	        method = RequestMethod.PUT, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public ExampleEntity update(@RequestBody ExampleEntity entity) 
+    public long update(@PathVariable("id") long id, @RequestBody UpdateUserRequestEntity entity) 
     {	
-   //     return userRepository.save(entity);
-    	return null;
+    	UserEntity user = userRepository.findOne(id);
+    	user.setFirstName(entity.getFirstName());
+    	user.setLastName(entity.getLastName());
+    	user.setPassword(entity.getPassword());
+    	user.setPhoneNumber(entity.getPhoneNumber());
+        return userRepository.save(user).getId();
     }	 
     
     
@@ -68,9 +89,10 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public void delete(@RequestBody ExampleEntity entity) 
+    public void delete(@RequestBody UserEntity entity) 
     {	
-        //userRepository.delete(entity);
+//        userRepository.delete(entity);
+        userRepository.delete(entity.getId());
     }	        
 	    
  }

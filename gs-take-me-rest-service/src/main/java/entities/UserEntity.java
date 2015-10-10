@@ -10,7 +10,8 @@ public class UserEntity extends BaseEntity<Long>
 {
 	
 	String phoneNumber;
-	String fullName;
+	String firstName;
+	String lastName;
 	String password;
 	String email;
 	
@@ -19,9 +20,10 @@ public class UserEntity extends BaseEntity<Long>
 	
 	public UserEntity() {}
 	
-	public UserEntity(String fullName) {
+	public UserEntity(String firstName, String lastName) {
 		super();
-		this.fullName = fullName;
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 
 	public String getPhoneNumber() {
@@ -30,11 +32,17 @@ public class UserEntity extends BaseEntity<Long>
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	public String getFullName() {
-		return fullName;
+	public String getFirstName() {
+		return firstName;
 	}
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 	public String getPassword() {
 		return password;
