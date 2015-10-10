@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import api.SignInRequestEntity;
 import api.SignUpRequestEntity;
 import api.UpdateUserRequestEntity;
+import entities.ResponseEntity;
 import entities.UserEntity;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserUnauthorizedException;
@@ -30,14 +31,14 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public Long signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException 
+	public ResponseEntity signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findByEmail(signInRequestEntity.getEmail());
     	
     	if (user == null || !user.getPassword().equals(signInRequestEntity.getPassword())) {
     		throw new UserUnauthorizedException();
     	} else {
-    		return user.getId();
+    		return new ResponseEntity(user.getId());
     	}
 	}	    
     
