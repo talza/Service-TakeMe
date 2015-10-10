@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sun.org.apache.xerces.internal.impl.xpath.regex.RegularExpression;
+
 import api.SignInRequestEntity;
 import api.SignUpRequestEntity;
 import api.UpdateUserRequestEntity;
 import entities.ResponseEntity;
 import entities.UserEntity;
 import exceptions.UserAlreadyExistsException;
+import exceptions.UserNotFoundException;
 import exceptions.UserUnauthorizedException;
 import repositories.UserRepository;
 
@@ -47,7 +50,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public Long signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException 
+    public ResponseEntity signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException 
     {	
     	UserEntity user = userRepository.findByEmail(entity.getEmail());
     	
@@ -60,23 +63,39 @@ public class UserResource
     		user.setEmail(entity.getEmail());
     		user.setPhoneNumber(entity.getPhoneNumber());
     		user.setPassword(entity.getPassword());
-    		return userRepository.save(user).getId();
+    		return new ResponseEntity((userRepository.save(user)).getId());
     	}
     }	    
     
-    @RequestMapping(value="/Update/{id}", 
+    @RequestMapping(value="/{id}", 
 	        method = RequestMethod.PUT, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public Long update(@PathVariable("id") Long id, @RequestBody UpdateUserRequestEntity entity) 
+    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody UpdateUserRequestEntity entity) 
     {	
     	UserEntity user = userRepository.findOne(id);
     	user.setFirstName(entity.getFirstName());
     	user.setLastName(entity.getLastName());
     	user.setPassword(entity.getPassword());
     	user.setPhoneNumber(entity.getPhoneNumber());
-        return userRepository.save(user).getId();
+        return new ResponseEntity(userRepository.save(user).getId());
+    }	
+    
+    @RequestMapping(value="/{token}", 
+	        method = RequestMethod.GET, 
+	        produces = "application/json;charset=utf-8",
+	        consumes="application/json;charset=utf-8")
+    @ResponseBody
+    public UserEntity getUser(@PathVariable("token") Long token) throws UserNotFoundException 
+    {	
+    	UserEntity user = userRepository.findOne(token);
+    	
+    	if (user != null){
+    		return user;
+    	} else {
+    		throw new UserNotFoundException();
+    	}
     }	 
     
     
