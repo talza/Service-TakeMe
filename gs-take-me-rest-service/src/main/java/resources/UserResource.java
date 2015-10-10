@@ -1,7 +1,5 @@
 package resources;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import api.SignInRequestEntity;
 import api.SignUpRequestEntity;
 import api.UpdateUserRequestEntity;
-import entities.ExampleEntity;
 import entities.UserEntity;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserUnauthorizedException;
@@ -33,17 +30,15 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public long signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException 
+	public Long signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findByEmail(signInRequestEntity.getEmail());
     	
-    	if (user.getPassword().equals(signInRequestEntity.getPassword())) {
-    		return user.getId();
-    	} else {
+    	if (user == null || !user.getPassword().equals(signInRequestEntity.getPassword())) {
     		throw new UserUnauthorizedException();
+    	} else {
+    		return user.getId();
     	}
-    		
-    //	return userRepository.findOne(id);
 	}	    
     
     @RequestMapping(value="/signUp", 
@@ -51,7 +46,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public long signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException 
+    public Long signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException 
     {	
     	UserEntity user = userRepository.findByEmail(entity.getEmail());
     	
@@ -73,7 +68,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public long update(@PathVariable("id") long id, @RequestBody UpdateUserRequestEntity entity) 
+    public Long update(@PathVariable("id") Long id, @RequestBody UpdateUserRequestEntity entity) 
     {	
     	UserEntity user = userRepository.findOne(id);
     	user.setFirstName(entity.getFirstName());
@@ -84,15 +79,15 @@ public class UserResource
     }	 
     
     
-    @RequestMapping(value="/Example", 
+    @RequestMapping(value="/Delete/{id}", 
 	        method = RequestMethod.DELETE, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public void delete(@RequestBody UserEntity entity) 
+    public void delete(@PathVariable("id") Long id) 
     {	
 //        userRepository.delete(entity);
-        userRepository.delete(entity.getId());
+        userRepository.delete(id);
     }	        
 	    
  }
