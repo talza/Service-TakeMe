@@ -84,8 +84,7 @@ public class UserResource
     
     @RequestMapping(value="/{token}", 
 	        method = RequestMethod.GET, 
-	        produces = "application/json;charset=utf-8",
-	        consumes="application/json;charset=utf-8")
+	        produces = "application/json;charset=utf-8")
     @ResponseBody
     public UserEntity getUser(@PathVariable("token") Long token) throws UserNotFoundException 
     {	
