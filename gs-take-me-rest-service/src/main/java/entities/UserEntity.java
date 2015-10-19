@@ -1,6 +1,10 @@
 package entities;
 
+import java.util.ArrayList;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -17,6 +21,9 @@ public class UserEntity extends BaseEntity<Long>
 	
 	@OneToOne(mappedBy="userEntity")
 	TokenEntity tokenEntity;
+	
+	@OneToMany(mappedBy="userEntity", fetch=FetchType.LAZY)
+	ArrayList<AdEntity> ads;
 	
 	public UserEntity() {}
 	
