@@ -4,9 +4,12 @@ import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 
 @Entity
 @Table(name="User")
@@ -24,6 +27,13 @@ public class UserEntity extends BaseEntity<Long>
 	
 	@OneToMany(mappedBy="userEntity", fetch=FetchType.LAZY)
 	ArrayList<AdEntity> ads;
+	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="wish_list",
+		      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+		      inverseJoinColumns={@JoinColumn(name="ad_id", referencedColumnName="id")})
+	ArrayList<AdEntity> wishList;
+	
 	
 	public UserEntity() {}
 	

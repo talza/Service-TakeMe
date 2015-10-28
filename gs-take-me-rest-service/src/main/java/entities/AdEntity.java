@@ -1,10 +1,13 @@
 package entities;
 
 import java.sql.Date;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -20,6 +23,12 @@ public class AdEntity extends BaseEntity<Long> {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	UserEntity userEntity;
+	
+	@ManyToMany(fetch=FetchType.LAZY)
+	@JoinTable(name="wish_list",
+		      joinColumns={@JoinColumn(name="ad_id", referencedColumnName="id")},
+		      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")})
+	ArrayList<UserEntity> wishedByList;
 	
 	Date publishedAt;
 	Date updatedAt;
