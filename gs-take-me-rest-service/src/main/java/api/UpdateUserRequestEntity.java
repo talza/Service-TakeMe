@@ -5,7 +5,7 @@ public class UpdateUserRequestEntity
 	private String firstName;
 	private String lastName;
 	private String phoneNumber;
-	private String password;
+//	private String password;
 	
 	public String getFirstName() {
 		return firstName;
@@ -25,11 +25,11 @@ public class UpdateUserRequestEntity
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
 	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
+//	public String getPassword() {
+//		return password;
+//	}
+//	public void setPassword(String password) {
+//		this.password = password;
+//	}
 	
 }
