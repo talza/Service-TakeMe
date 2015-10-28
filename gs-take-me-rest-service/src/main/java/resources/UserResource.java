@@ -77,7 +77,6 @@ public class UserResource
     	UserEntity user = userRepository.findOne(id);
     	user.setFirstName(entity.getFirstName());
     	user.setLastName(entity.getLastName());
-    	user.setPassword(entity.getPassword());
     	user.setPhoneNumber(entity.getPhoneNumber());
         return new ResponseEntity(userRepository.save(user).getId());
     }	
