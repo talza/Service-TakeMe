@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -26,7 +27,7 @@ public class UserEntity extends BaseEntity<Long>
 	TokenEntity tokenEntity;
 	
 	@OneToMany(mappedBy="userEntity", fetch=FetchType.LAZY)
-	ArrayList<AdEntity> ads;
+	Set<AdEntity> ads;
 	
 	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name="wish_list",
