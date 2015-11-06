@@ -39,8 +39,7 @@ public class AdResource {
 	@Autowired
 	PetRepository petRepository;
 
-	@RequestMapping(value="", 
-	        method = RequestMethod.POST, 
+	@RequestMapping(method = RequestMethod.POST, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
@@ -108,25 +107,7 @@ public class AdResource {
 		
 		return ad;
 	}
-	
-	@RequestMapping(value="", 
-	        method = RequestMethod.GET, 
-	        produces = "application/json;charset=utf-8")
-	@ResponseBody
-	public List<AdEntity> getAdsForUser(@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException, AdNotFoundException, UserUnauthorizedException 
-	{	
-    	UserEntity user = userRepository.findOne(userId);
-    	
-    	if (user == null) {
-    		throw new UserNotFoundException();
-    	}
-    	
-		// get all ads
-		List<AdEntity> adsList = adRepository.findByuserEntity(user);
-			
-		return adsList;
-	}
-	
+		
 	@RequestMapping(value="/{id}", 
 	        method = RequestMethod.DELETE, 
 	        produces = "application/json;charset=utf-8")
@@ -155,24 +136,35 @@ public class AdResource {
 		adRepository.delete(ad);
 	}
 	
-	@RequestMapping(value="", 
-	        method = RequestMethod.GET, 
+	@RequestMapping(method = RequestMethod.GET, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public List<AdEntity> searchAds( @RequestParam(value ="userId", required=true) Long userId,
+	public List<AdEntity> searchAds( @RequestParam(value ="userId", required=false) Long userId,
 			@RequestParam(value ="petType", required=false) Integer petType,
 			@RequestParam(value ="petSize", required=false) Integer petSize,
 			@RequestParam(value ="perGender", required=false) Character petGender,
 			@RequestParam(value ="ageFrom", required=false) Long ageFrom,
 			@RequestParam(value ="ageTo", required=false) Long ageTo) throws UserNotFoundException 
 	{	
-    	UserEntity user = userRepository.findOne(userId);
+   
+    	List<AdEntity> allAds;
     	
-    	if (user == null) {
-    		throw new UserNotFoundException();
+    	// check if filtering by user id is needed 
+    	if (userId != null){
+    		
+    		// check that the user exists
+    		UserEntity user = userRepository.findOne(userId);
+        	
+        	if (user == null) {
+        		throw new UserNotFoundException();
+        	}
+        	
+        	// get all ads for user
+    		allAds = adRepository.findByuserEntity(user);
+    	} else {
+    		// get all ads
+    		allAds = adRepository.findAll();
     	}
-    	
-    	List<AdEntity> allAds = adRepository.findAll();
     	List<AdEntity> filteredAds = new ArrayList<AdEntity>();
     	filteredAds.addAll(allAds);
 		
