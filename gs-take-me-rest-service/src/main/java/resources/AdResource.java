@@ -109,7 +109,7 @@ public class AdResource {
 		return ad;
 	}
 	
-	@RequestMapping(value="/ads", 
+	@RequestMapping(value="/myAds", 
 	        method = RequestMethod.GET, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -121,7 +121,7 @@ public class AdResource {
     		throw new UserNotFoundException();
     	}
     	
-		// get the ad
+		// get all ads
 		List<AdEntity> adsList = adRepository.findByuserEntity(user);
 			
 		return adsList;
@@ -187,24 +187,29 @@ public class AdResource {
 			// check pet's type
 			if (petType != null && !petType.equals(currentPet.getType())){
 				filteredAds.remove(adEntity);
+				continue;
 			}
 			
 			// check pet's size
 			if (petSize != null && !petSize.equals(currentPet.getSize())){
 				filteredAds.remove(adEntity);
+				continue;
 			}
 			
 			// check pet's gender
 			if (petGender != null && !petGender.equals(currentPet.getGender())){
 				filteredAds.remove(adEntity);
+				continue;
 			}
 			
 			// check pet's age
 			if (ageFrom != null && ageFrom > currentPet.getAge()){
 				filteredAds.remove(adEntity);
+				continue;
 			}
 			if (ageTo != null && ageTo < currentPet.getAge()){
 				filteredAds.remove(adEntity);
+				continue;
 			}
 		}
 		
