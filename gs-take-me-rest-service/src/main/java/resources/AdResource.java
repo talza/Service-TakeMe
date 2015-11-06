@@ -39,7 +39,7 @@ public class AdResource {
 	@Autowired
 	PetRepository petRepository;
 
-	@RequestMapping(value="/createAd", 
+	@RequestMapping(value="", 
 	        method = RequestMethod.POST, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
@@ -109,7 +109,7 @@ public class AdResource {
 		return ad;
 	}
 	
-	@RequestMapping(value="/myAds", 
+	@RequestMapping(value="", 
 	        method = RequestMethod.GET, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -127,7 +127,7 @@ public class AdResource {
 		return adsList;
 	}
 	
-	@RequestMapping(value="/deleteAd/{id}", 
+	@RequestMapping(value="/{id}", 
 	        method = RequestMethod.DELETE, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -155,7 +155,7 @@ public class AdResource {
 		adRepository.delete(ad);
 	}
 	
-	@RequestMapping(value="/search", 
+	@RequestMapping(value="", 
 	        method = RequestMethod.GET, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -217,7 +217,7 @@ public class AdResource {
 		return filteredAds;
 	}
 	
-	@RequestMapping(value="/updateAd/{id}", 
+	@RequestMapping(value="/{id}", 
 	        method = RequestMethod.PUT, 
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
