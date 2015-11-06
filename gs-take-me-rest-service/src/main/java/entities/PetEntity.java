@@ -10,7 +10,7 @@ public class PetEntity extends BaseEntity<Long> {
 	
 	String name;
 	Float age;
-	Integer gender;
+	Character gender;
 	String photoUrl;
 	String description;
 	Integer size;
@@ -18,10 +18,6 @@ public class PetEntity extends BaseEntity<Long> {
 	
 	@OneToOne (mappedBy="petEntity")
 	AdEntity adEntity;
-
-	public PetEntity() {
-		// TODO Auto-generated constructor stub
-	}
 
 	public String getName() {
 		return name;
@@ -39,11 +35,11 @@ public class PetEntity extends BaseEntity<Long> {
 		this.age = age;
 	}
 
-	public Integer getGender() {
+	public Character getGender() {
 		return gender;
 	}
 
-	public void setGender(Integer gender) {
+	public void setGender(Character gender) {
 		this.gender = gender;
 	}
 
@@ -77,6 +73,14 @@ public class PetEntity extends BaseEntity<Long> {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public AdEntity getAdEntity() {
+		return adEntity;
+	}
+
+	public void setAdEntity(AdEntity adEntity) {
+		this.adEntity = adEntity;
 	}
 	
 	

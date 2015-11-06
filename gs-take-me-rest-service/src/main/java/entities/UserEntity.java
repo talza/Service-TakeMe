@@ -1,6 +1,7 @@
 package entities;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Entity;
@@ -33,7 +34,7 @@ public class UserEntity extends BaseEntity<Long>
 	@JoinTable(name="wish_list",
 		      joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
 		      inverseJoinColumns={@JoinColumn(name="ad_id", referencedColumnName="id")})
-	ArrayList<AdEntity> wishList;
+	List<AdEntity> wishList;
 	
 	
 	public UserEntity() {}

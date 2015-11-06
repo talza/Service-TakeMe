@@ -1,8 +1,10 @@
 package entities;
 
-import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -16,7 +18,7 @@ import javax.persistence.Table;
 @Table(name="Ads")
 public class AdEntity extends BaseEntity<Long> {
 	
-	@OneToOne
+	@OneToOne (cascade={CascadeType.ALL})
 	@JoinColumn(name="pet_id")
 	PetEntity petEntity;
 	
@@ -28,15 +30,10 @@ public class AdEntity extends BaseEntity<Long> {
 	@JoinTable(name="wish_list",
 		      joinColumns={@JoinColumn(name="ad_id", referencedColumnName="id")},
 		      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")})
-	ArrayList<UserEntity> wishedByList;
+	List<UserEntity> wishedByList;
 	
 	Date publishedAt;
 	Date updatedAt;
-	
-
-	public AdEntity() {
-		// TODO Auto-generated constructor stub
-	}
 
 
 	public PetEntity getPetEntity() {
@@ -44,7 +41,7 @@ public class AdEntity extends BaseEntity<Long> {
 	}
 
 
-	public void setPetId(PetEntity petEntity) {
+	public void setPetEntity(PetEntity petEntity) {
 		this.petEntity = petEntity;
 	}
 
