@@ -10,7 +10,7 @@ public class PetEntity extends BaseEntity<Long> {
 	
 	String name;
 	Float age;
-	Character gender;
+	Integer gender;
 	String photoUrl;
 	String description;
 	Integer size;
@@ -35,11 +35,11 @@ public class PetEntity extends BaseEntity<Long> {
 		this.age = age;
 	}
 
-	public Character getGender() {
+	public Integer getGender() {
 		return gender;
 	}
 
-	public void setGender(Character gender) {
+	public void setGender(Integer gender) {
 		this.gender = gender;
 	}
 

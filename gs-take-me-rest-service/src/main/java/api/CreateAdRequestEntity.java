@@ -3,7 +3,7 @@ package api;
 public class CreateAdRequestEntity {
 	
 	private String petName;
-	private Character petGender;
+	private Integer petGender;
 	private Float petAge;
 	private Integer petSize;
 	private Integer petType;
@@ -17,10 +17,10 @@ public class CreateAdRequestEntity {
 	public void setPetName(String petName) {
 		this.petName = petName;
 	}
-	public Character getPetGender() {
+	public Integer getPetGender() {
 		return petGender;
 	}
-	public void setPetGender(Character petGender) {
+	public void setPetGender(Integer petGender) {
 		this.petGender = petGender;
 	}
 	public Float getPetAge() {

@@ -1,6 +1,8 @@
 package resources;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -107,6 +109,24 @@ public class AdResource {
 		return ad;
 	}
 	
+	@RequestMapping(value="/ads", 
+	        method = RequestMethod.GET, 
+	        produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public List<AdEntity> getAdsForUser(@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException, AdNotFoundException, UserUnauthorizedException 
+	{	
+    	UserEntity user = userRepository.findOne(userId);
+    	
+    	if (user == null) {
+    		throw new UserNotFoundException();
+    	}
+    	
+		// get the ad
+		List<AdEntity> adsList = adRepository.findByuserEntity(user);
+			
+		return adsList;
+	}
+	
 	@RequestMapping(value="/deleteAd/{id}", 
 	        method = RequestMethod.DELETE, 
 	        produces = "application/json;charset=utf-8")
@@ -133,6 +153,63 @@ public class AdResource {
 		}
 		
 		adRepository.delete(ad);
+	}
+	
+	@RequestMapping(value="/search", 
+	        method = RequestMethod.GET, 
+	        produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public List<AdEntity> searchAds( @RequestParam(value ="userId", required=true) Long userId,
+			@RequestParam(value ="petType", required=false) Integer petType,
+			@RequestParam(value ="petSize", required=false) Integer petSize,
+			@RequestParam(value ="perGender", required=false) Character petGender,
+			@RequestParam(value ="ageFrom", required=false) Long ageFrom,
+			@RequestParam(value ="ageTo", required=false) Long ageTo) throws UserNotFoundException 
+	{	
+    	UserEntity user = userRepository.findOne(userId);
+    	
+    	if (user == null) {
+    		throw new UserNotFoundException();
+    	}
+    	
+    	List<AdEntity> allAds = adRepository.findAll();
+    	List<AdEntity> filteredAds = new ArrayList<AdEntity>();
+    	filteredAds.addAll(allAds);
+		
+		if (allAds == null){
+			return filteredAds;
+		}
+		
+		// filter ads by parameters
+		for (AdEntity adEntity : allAds) {
+			PetEntity currentPet = adEntity.getPetEntity();
+			
+			// check pet's type
+			if (petType != null && !petType.equals(currentPet.getType())){
+				filteredAds.remove(adEntity);
+			}
+			
+			// check pet's size
+			if (petSize != null && !petSize.equals(currentPet.getSize())){
+				filteredAds.remove(adEntity);
+			}
+			
+			// check pet's gender
+			if (petGender != null && !petGender.equals(currentPet.getGender())){
+				filteredAds.remove(adEntity);
+			}
+			
+			// check pet's age
+			if (ageFrom != null && ageFrom > currentPet.getAge()){
+				filteredAds.remove(adEntity);
+			}
+			if (ageTo != null && ageTo < currentPet.getAge()){
+				filteredAds.remove(adEntity);
+			}
+		}
+		
+				
+		return filteredAds;
 	}
 	
 	@RequestMapping(value="/updateAd/{id}", 
