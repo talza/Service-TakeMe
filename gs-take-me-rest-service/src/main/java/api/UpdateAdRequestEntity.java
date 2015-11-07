@@ -3,10 +3,8 @@ package api;
 public class UpdateAdRequestEntity {
 	
 	private String petName;
-//	private Character petGender;
-	private Float petAge;
+	private Integer petAge;
 	private Integer petSize;
-//	private Integer petType;
 	private String petPhotoUrl;
 	private String petDescription;
 	
@@ -17,16 +15,10 @@ public class UpdateAdRequestEntity {
 	public void setPetName(String petName) {
 		this.petName = petName;
 	}
-//	public Character getPetGender() {
-//		return petGender;
-//	}
-//	public void setPetGender(Character petGender) {
-//		this.petGender = petGender;
-//	}
-	public Float getPetAge() {
+	public Integer getPetAge() {
 		return petAge;
 	}
-	public void setPetAge(Float petAge) {
+	public void setPetAge(Integer petAge) {
 		this.petAge = petAge;
 	}
 	public Integer getPetSize() {
@@ -35,12 +27,6 @@ public class UpdateAdRequestEntity {
 	public void setPetSize(Integer petSize) {
 		this.petSize = petSize;
 	}
-//	public Integer getPetType() {
-//		return petType;
-//	}
-//	public void setPetType(Integer petType) {
-//		this.petType = petType;
-//	}
 	public String getPetPhotoUrl() {
 		return petPhotoUrl;
 	}

@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import Beans.TokenResponseBean;
 import api.SignInRequestEntity;
 import api.SignUpRequestEntity;
 import api.UpdateUserRequestEntity;
-import entities.ResponseEntity;
 import entities.UserEntity;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
@@ -32,14 +32,14 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public ResponseEntity signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException 
+	public TokenResponseBean signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findByEmail(signInRequestEntity.getEmail());
     	
     	if (user == null || !user.getPassword().equals(signInRequestEntity.getPassword())) {
     		throw new UserUnauthorizedException();
     	} else {
-    		return new ResponseEntity(user.getId());
+    		return new TokenResponseBean(user.getId());
     	}
 	}	    
     
@@ -48,7 +48,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public ResponseEntity signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException 
+    public TokenResponseBean signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException 
     {	
     	UserEntity user = userRepository.findByEmail(entity.getEmail());
     	
@@ -61,7 +61,7 @@ public class UserResource
     		user.setEmail(entity.getEmail());
     		user.setPhoneNumber(entity.getPhoneNumber());
     		user.setPassword(entity.getPassword());
-    		return new ResponseEntity((userRepository.save(user)).getId());
+    		return new TokenResponseBean((userRepository.save(user)).getId());
     	}
     }	    
     
@@ -70,13 +70,13 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public ResponseEntity update(@PathVariable("id") Long id, @RequestBody UpdateUserRequestEntity entity) 
+    public TokenResponseBean update(@PathVariable("id") Long id, @RequestBody UpdateUserRequestEntity entity) 
     {	
     	UserEntity user = userRepository.findOne(id);
     	user.setFirstName(entity.getFirstName());
     	user.setLastName(entity.getLastName());
     	user.setPhoneNumber(entity.getPhoneNumber());
-        return new ResponseEntity(userRepository.save(user).getId());
+        return new TokenResponseBean(userRepository.save(user).getId());
     }	
     
     @RequestMapping(value="/{token}", 

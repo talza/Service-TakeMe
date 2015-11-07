@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import Beans.AdBean;
+import Beans.ResponseBean;
 import api.CreateAdRequestEntity;
 import api.UpdateAdRequestEntity;
 import entities.AdEntity;
 import entities.PetEntity;
-import entities.ResponseEntity;
 import entities.UserEntity;
 import exceptions.AdNotFoundException;
 import exceptions.UserNotFoundException;
@@ -43,7 +44,7 @@ public class AdResource {
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public ResponseEntity createAdd(@RequestBody CreateAdRequestEntity request,
+	public ResponseBean createAdd(@RequestBody CreateAdRequestEntity request,
 			@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException 
 	{	
     	UserEntity user = userRepository.findOne(userId);
@@ -70,21 +71,20 @@ public class AdResource {
 		ad.setUserEntity(user);
 		
 		// bind ad and pet
-//		pet.setAdEntity(ad);
 		ad.setPetEntity(pet);
 		
 		//save data
 		petRepository.save(pet);
 		adRepository.save(ad);
 		
-		return new ResponseEntity(user.getId());
+		return new ResponseBean("ad added successfuly", true);
 	}
 	
 	@RequestMapping(value="/{id}", 
 	        method = RequestMethod.GET, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public AdEntity getAd(@PathVariable("id") Long id, 
+	public AdBean getAd(@PathVariable("id") Long id, 
 			@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException, AdNotFoundException, UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findOne(userId);
@@ -105,7 +105,7 @@ public class AdResource {
 			throw new UserUnauthorizedException();
 		}
 		
-		return ad;
+		return new AdBean(ad);
 	}
 		
 	@RequestMapping(value="/{id}", 
@@ -139,7 +139,7 @@ public class AdResource {
 	@RequestMapping(method = RequestMethod.GET, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public List<AdEntity> searchAds( @RequestParam(value ="userId", required=false) Long userId,
+	public List<AdBean> searchAds( @RequestParam(value ="userId", required=false) Long userId,
 			@RequestParam(value ="petType", required=false) Integer petType,
 			@RequestParam(value ="petSize", required=false) Integer petSize,
 			@RequestParam(value ="perGender", required=false) Character petGender,
@@ -148,6 +148,8 @@ public class AdResource {
 	{	
    
     	List<AdEntity> allAds;
+    	List<AdEntity> filteredAds = new ArrayList<AdEntity>();
+    	List<AdBean> result = new ArrayList<AdBean>();
     	
     	// check if filtering by user id is needed 
     	if (userId != null){
@@ -165,11 +167,11 @@ public class AdResource {
     		// get all ads
     		allAds = adRepository.findAll();
     	}
-    	List<AdEntity> filteredAds = new ArrayList<AdEntity>();
+    	
     	filteredAds.addAll(allAds);
 		
 		if (allAds == null){
-			return filteredAds;
+			return result;
 		}
 		
 		// filter ads by parameters
@@ -205,8 +207,14 @@ public class AdResource {
 			}
 		}
 		
+		// convert all filtered ads to AdBean objects
+		for (AdEntity adEntity : filteredAds) {
+			AdBean adBean = new AdBean(adEntity);
+			result.add(adBean);
+		}
+		
 				
-		return filteredAds;
+		return result;
 	}
 	
 	@RequestMapping(value="/{id}", 
@@ -214,7 +222,7 @@ public class AdResource {
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public ResponseEntity updateAd(@PathVariable("id") Long id, @RequestBody UpdateAdRequestEntity request,
+	public ResponseBean updateAd(@PathVariable("id") Long id, @RequestBody UpdateAdRequestEntity request,
 			@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException, AdNotFoundException, UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findOne(userId);
@@ -239,11 +247,9 @@ public class AdResource {
 		PetEntity pet = ad.getPetEntity();
 		pet.setAge(request.getPetAge());
 		pet.setDescription(request.getPetDescription());
-//		pet.setGender(request.getPetGender());
 		pet.setName(request.getPetName());
 		pet.setPhotoUrl(request.getPetPhotoUrl());
 		pet.setSize(request.getPetSize());
-//		pet.setType(request.getPetType());
 		
 		// create ad
 		Date now = new Date();
@@ -257,7 +263,7 @@ public class AdResource {
 		petRepository.save(pet);
 		adRepository.save(ad);
 		
-		return new ResponseEntity(user.getId());
+		return new ResponseBean("ad updated successfuly", true);
 	}
 
 }

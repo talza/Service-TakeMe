@@ -4,7 +4,7 @@ public class CreateAdRequestEntity {
 	
 	private String petName;
 	private Integer petGender;
-	private Float petAge;
+	private Integer petAge;
 	private Integer petSize;
 	private Integer petType;
 	private String petPhotoUrl;
@@ -23,10 +23,10 @@ public class CreateAdRequestEntity {
 	public void setPetGender(Integer petGender) {
 		this.petGender = petGender;
 	}
-	public Float getPetAge() {
+	public Integer getPetAge() {
 		return petAge;
 	}
-	public void setPetAge(Float petAge) {
+	public void setPetAge(Integer petAge) {
 		this.petAge = petAge;
 	}
 	public Integer getPetSize() {

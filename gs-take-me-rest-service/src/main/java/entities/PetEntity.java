@@ -11,13 +11,14 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 public class PetEntity extends BaseEntity<Long> {
 	
 	String name;
-	Float age;
+	Integer age;
 	Integer gender;
 	String photoUrl;
 	String description;
 	Integer size;
 	Integer type;
 	
+	@JsonIgnore
 	@OneToOne (mappedBy="petEntity")
 	AdEntity adEntity;
 
@@ -29,11 +30,11 @@ public class PetEntity extends BaseEntity<Long> {
 		this.name = name;
 	}
 
-	public Float getAge() {
+	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(Float age) {
+	public void setAge(Integer age) {
 		this.age = age;
 	}
 
@@ -77,7 +78,7 @@ public class PetEntity extends BaseEntity<Long> {
 		this.type = type;
 	}
 
-	@JsonIgnore
+	
 	public AdEntity getAdEntity() {
 		return adEntity;
 	}
