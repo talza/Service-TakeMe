@@ -142,7 +142,7 @@ public class AdResource {
 	public List<AdBean> searchAds( @RequestParam(value ="userId", required=false) Long userId,
 			@RequestParam(value ="petType", required=false) Integer petType,
 			@RequestParam(value ="petSize", required=false) Integer petSize,
-			@RequestParam(value ="perGender", required=false) Character petGender,
+			@RequestParam(value ="petGender", required=false) Character petGender,
 			@RequestParam(value ="ageFrom", required=false) Long ageFrom,
 			@RequestParam(value ="ageTo", required=false) Long ageTo) throws UserNotFoundException 
 	{	
