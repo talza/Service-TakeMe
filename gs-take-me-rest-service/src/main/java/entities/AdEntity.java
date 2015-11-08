@@ -24,12 +24,13 @@ public class AdEntity extends BaseEntity<Long> {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="user_id")
 	UserEntity userEntity;
-	
-	@ManyToMany(fetch=FetchType.LAZY)
-	@JoinTable(name="wish_list",
-		      joinColumns={@JoinColumn(name="ad_id", referencedColumnName="id")},
-		      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")})
-	List<UserEntity> wishedByList;
+
+//	TODO: Consider remove
+//	@ManyToMany(fetch=FetchType.LAZY)
+//	@JoinTable(name="wishlists",
+//		      joinColumns={@JoinColumn(name="ad_id", referencedColumnName="id")},
+//		      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")})
+//	List<UserEntity> wishedByList = new ArrayList<>();
 	
 	Date publishedAt;
 	Date updatedAt;

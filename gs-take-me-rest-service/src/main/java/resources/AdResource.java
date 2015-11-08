@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import entities.WhishlistEntity;
+import entities.WishlistEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +27,7 @@ import exceptions.UserUnauthorizedException;
 import repositories.AdRepository;
 import repositories.PetRepository;
 import repositories.UserRepository;
-import repositories.WhishlistRepository;
+import repositories.WishlistRepository;
 
 @RestController
 @RequestMapping(value="/ad")
@@ -43,7 +43,7 @@ public class AdResource {
 	PetRepository petRepository;
 
 	@Autowired
-	WhishlistRepository whishlistRepository;
+	WishlistRepository wishlistRepository;
 
 	@RequestMapping(method = RequestMethod.POST, 
 	        produces = "application/json;charset=utf-8",
@@ -209,9 +209,9 @@ public class AdResource {
 				continue;
 			}
 			if (inWishList && user != null) {
-				WhishlistEntity whishlistEntity =
-						whishlistRepository.findByUserEntityAndAdEntity(user, adEntity);
-				if (whishlistEntity == null) {
+				WishlistEntity wishlistEntity =
+						wishlistRepository.findByUserIdAndAdId(user.getId(), adEntity.getId());
+				if (wishlistEntity == null) {
 					filteredAds.remove(adEntity);
 				}
 			}
