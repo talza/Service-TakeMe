@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import entities.WhishlistEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,6 +27,7 @@ import exceptions.UserUnauthorizedException;
 import repositories.AdRepository;
 import repositories.PetRepository;
 import repositories.UserRepository;
+import repositories.WhishlistRepository;
 
 @RestController
 @RequestMapping(value="/ad")
@@ -39,6 +41,9 @@ public class AdResource {
 	
 	@Autowired
 	PetRepository petRepository;
+
+	@Autowired
+	WhishlistRepository whishlistRepository;
 
 	@RequestMapping(method = RequestMethod.POST, 
 	        produces = "application/json;charset=utf-8",
@@ -142,20 +147,22 @@ public class AdResource {
 	public List<AdBean> searchAds( @RequestParam(value ="userId", required=false) Long userId,
 			@RequestParam(value ="petType", required=false) Integer petType,
 			@RequestParam(value ="petSize", required=false) Integer petSize,
-			@RequestParam(value ="petGender", required=false) Character petGender,
+			@RequestParam(value ="petGender", required=false) Integer petGender,
 			@RequestParam(value ="ageFrom", required=false) Long ageFrom,
-			@RequestParam(value ="ageTo", required=false) Long ageTo) throws UserNotFoundException 
+			@RequestParam(value ="ageTo", required=false) Long ageTo,
+			@RequestParam(value ="inWishList", required=false, defaultValue = "0") boolean inWishList) throws UserNotFoundException
 	{	
    
     	List<AdEntity> allAds;
     	List<AdEntity> filteredAds = new ArrayList<AdEntity>();
     	List<AdBean> result = new ArrayList<AdBean>();
-    	
+		UserEntity user = null;
+
     	// check if filtering by user id is needed 
     	if (userId != null){
     		
     		// check that the user exists
-    		UserEntity user = userRepository.findOne(userId);
+    		user = userRepository.findOne(userId);
         	
         	if (user == null) {
         		throw new UserNotFoundException();
@@ -169,10 +176,6 @@ public class AdResource {
     	}
     	
     	filteredAds.addAll(allAds);
-		
-		if (allAds == null){
-			return result;
-		}
 		
 		// filter ads by parameters
 		for (AdEntity adEntity : allAds) {
@@ -204,6 +207,13 @@ public class AdResource {
 			if (ageTo != null && ageTo < currentPet.getAge()){
 				filteredAds.remove(adEntity);
 				continue;
+			}
+			if (inWishList && user != null) {
+				WhishlistEntity whishlistEntity =
+						whishlistRepository.findByUserEntityAndAdEntity(user, adEntity);
+				if (whishlistEntity == null) {
+					filteredAds.remove(adEntity);
+				}
 			}
 		}
 		
