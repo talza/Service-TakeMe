@@ -7,4 +7,5 @@ import entities.UserEntity;
 public interface UserRepository extends JpaRepository<UserEntity,Long>
 {	
 	 UserEntity findByEmail(String email);
+	 UserEntity findByFacebookToken(String facebookToken);
 }

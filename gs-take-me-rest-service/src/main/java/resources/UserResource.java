@@ -71,7 +71,27 @@ public class UserResource
     		user.setEmail(entity.getEmail());
     		user.setPhoneNumber(entity.getPhoneNumber());
     		user.setPassword(entity.getPassword());
+    		user.setFacebookToken(entity.getFacebookToken());
     		return new TokenResponseBean((userRepository.save(user)).getId());
+    	}
+    }
+    
+    @RequestMapping(value="/signViaFacebook",
+	        method = RequestMethod.POST,
+	        produces = "application/json;charset=utf-8",
+	        consumes="application/json;charset=utf-8")
+    @ResponseBody
+    public Long signViaFacebook(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException
+    {
+    	UserEntity user = userRepository.findByEmail(entity.getEmail());
+
+    	if (user != null){
+    		// update facebook token
+    		user.setFacebookToken(entity.getFacebookToken());
+    		userRepository.save(user);
+    		return user.getId();
+    	} else {
+    		return signUp(entity).getId();
     	}
     }
 
@@ -104,6 +124,20 @@ public class UserResource
     	}
     }
 
+    @RequestMapping(value="",
+	        method = RequestMethod.GET,
+	        produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public Long getUserByFacebook(@RequestParam(value ="facebookToken", required=true)String facebookToken) throws UserNotFoundException
+    {
+    	UserEntity user = userRepository.findByFacebookToken(facebookToken);
+
+    	if (user != null){
+    		return user.getId();
+    	} else {
+    		throw new UserNotFoundException();
+    	}
+    }
 
     @RequestMapping(value="/Delete/{id}",
 	        method = RequestMethod.DELETE,
@@ -115,7 +149,7 @@ public class UserResource
 //        userRepository.delete(entity);
         userRepository.delete(id);
     }
-
+    
 	@RequestMapping(value="/{user_id}/wishlist",
 			method = RequestMethod.POST,
 			produces = "application/json;charset=utf-8",
