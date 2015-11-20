@@ -21,7 +21,7 @@ public class AdEntity extends BaseEntity<Long> {
 	@JoinColumn(name="pet_id")
 	PetEntity petEntity;
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	UserEntity userEntity;
 

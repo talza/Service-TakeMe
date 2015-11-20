@@ -2,12 +2,21 @@ package Beans;
 
 public class OwnerBean {
 	
+	private Long   ownerID;
 	private String ownerFirstName;
 	private String ownerLastName;
 	private String ownerPhone;
 	private String ownerEmail;
 
 	public OwnerBean() {
+	}
+
+	public Long getOwnerID() {
+		return ownerID;
+	}
+
+	public void setOwnerID(Long ownerID) {
+		this.ownerID = ownerID;
 	}
 
 	public String getOwnerFirstName() {

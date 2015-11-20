@@ -40,6 +40,7 @@ public class AdBean {
 			
 			if (userEntity != null){
 				OwnerBean owner = new OwnerBean();
+				owner.setOwnerID(userEntity.getId());
 				owner.setOwnerFirstName(userEntity.getFirstName());
 				owner.setOwnerLastName(userEntity.getLastName());
 				owner.setOwnerEmail(userEntity.getEmail());
