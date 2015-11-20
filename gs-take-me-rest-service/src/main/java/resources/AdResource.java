@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import entities.WishlistEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +20,7 @@ import api.UpdateAdRequestEntity;
 import entities.AdEntity;
 import entities.PetEntity;
 import entities.UserEntity;
+import entities.WishlistEntity;
 import exceptions.AdNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.UserUnauthorizedException;
@@ -136,6 +136,13 @@ public class AdResource {
 		// check validation
 		if (ad.getUserEntity() == null || !userId.equals(ad.getUserEntity().getId())){
 			throw new UserUnauthorizedException();
+		}
+		
+		// check if the add is on a wish list
+		List<WishlistEntity> wishs = wishlistRepository.findByAdId(id);
+		
+		if (wishs != null && !wishs.isEmpty()){
+			wishlistRepository.delete(wishs);
 		}
 		
 		adRepository.delete(ad);
