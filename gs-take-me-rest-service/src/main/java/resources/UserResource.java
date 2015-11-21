@@ -81,7 +81,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public Long signViaFacebook(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException
+    public TokenResponseBean signViaFacebook(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException
     {
     	UserEntity user = userRepository.findByEmail(entity.getEmail());
 
@@ -89,9 +89,9 @@ public class UserResource
     		// update facebook token
     		user.setFacebookToken(entity.getFacebookToken());
     		userRepository.save(user);
-    		return user.getId();
+    		return new TokenResponseBean(user.getId());
     	} else {
-    		return signUp(entity).getId();
+    		return signUp(entity);
     	}
     }
 
@@ -128,12 +128,12 @@ public class UserResource
 	        method = RequestMethod.GET,
 	        produces = "application/json;charset=utf-8")
     @ResponseBody
-    public Long getUserByFacebook(@RequestParam(value ="facebookToken", required=true)String facebookToken) throws UserNotFoundException
+    public TokenResponseBean getUserByFacebook(@RequestParam(value ="facebookToken", required=true)String facebookToken) throws UserNotFoundException
     {
     	UserEntity user = userRepository.findByFacebookToken(facebookToken);
 
     	if (user != null){
-    		return user.getId();
+    		return new TokenResponseBean(user.getId());
     	} else {
     		throw new UserNotFoundException();
     	}
