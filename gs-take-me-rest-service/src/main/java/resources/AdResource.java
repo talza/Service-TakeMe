@@ -117,7 +117,7 @@ public class AdResource {
 	        method = RequestMethod.DELETE, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public void deleteAd(@PathVariable("id") Long id, 
+	public ResponseBean deleteAd(@PathVariable("id") Long id, 
 			@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException, AdNotFoundException, UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findOne(userId);
@@ -146,6 +146,8 @@ public class AdResource {
 		}
 		
 		adRepository.delete(ad);
+		
+		return new ResponseBean("ad deleted successfuly", true);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, 
