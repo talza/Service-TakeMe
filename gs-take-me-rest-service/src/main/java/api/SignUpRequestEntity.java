@@ -8,7 +8,8 @@ public class SignUpRequestEntity
 	private String email;
 	private String password;
 	
-	
+	private String facebookToken;
+
 	public String getFirstName() {
 		return firstName;
 	}
@@ -39,5 +40,10 @@ public class SignUpRequestEntity
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	public String getFacebookToken() {
+		return facebookToken;
+	}
+	public void setFacebookToken(String facebookToken) {
+		this.facebookToken = facebookToken;
+	}
 }

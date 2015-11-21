@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import entities.WishlistEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +21,7 @@ import api.UpdateAdRequestEntity;
 import entities.AdEntity;
 import entities.PetEntity;
 import entities.UserEntity;
+import entities.WishlistEntity;
 import exceptions.AdNotFoundException;
 import exceptions.UserNotFoundException;
 import exceptions.UserUnauthorizedException;
@@ -118,7 +118,7 @@ public class AdResource {
 	        method = RequestMethod.DELETE, 
 	        produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public void deleteAd(@PathVariable("id") Long id, 
+	public ResponseBean deleteAd(@PathVariable("id") Long id, 
 			@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException, AdNotFoundException, UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findOne(userId);
@@ -139,7 +139,16 @@ public class AdResource {
 			throw new UserUnauthorizedException();
 		}
 		
+		// check if the add is on a wish list
+		List<WishlistEntity> wishs = wishlistRepository.findByAdId(id);
+		
+		if (wishs != null && !wishs.isEmpty()){
+			wishlistRepository.delete(wishs);
+		}
+		
 		adRepository.delete(ad);
+		
+		return new ResponseBean("ad deleted successfuly", true);
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, 
