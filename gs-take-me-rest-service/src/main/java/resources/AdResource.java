@@ -3,6 +3,7 @@ package resources;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -100,17 +101,16 @@ public class AdResource {
     	
 		// get the ad
 		AdEntity ad = adRepository.findOne(id);
-		
 		if (ad == null){
 			throw new AdNotFoundException();
 		}
-		
-		// check validation
-		if (ad.getUserEntity() == null || !userId.equals(ad.getUserEntity().getId())){
-			throw new UserUnauthorizedException();
-		}
-		
-		return new AdBean(ad);
+
+		boolean isInWishlist = wishlistRepository.findByUserIdAndAdId(userId, ad.getId()) != null;
+
+		AdBean adBean = new AdBean(ad);
+		adBean.setIsInWishlist(isInWishlist);
+
+		return adBean;
 	}
 		
 	@RequestMapping(value="/{id}", 
@@ -159,10 +159,12 @@ public class AdResource {
 			@RequestParam(value ="petGender", required=false) Integer petGender,
 			@RequestParam(value ="ageFrom", required=false) Long ageFrom,
 			@RequestParam(value ="ageTo", required=false) Long ageTo,
-			@RequestParam(value ="inWishList", required=false, defaultValue = "0") boolean inWishList) throws UserNotFoundException
-	{	
+			@RequestParam(value ="inWishList", required=false, defaultValue = "0") boolean inWishList,
+		    @RequestParam(value ="isMyPet", required=false, defaultValue = "0") boolean isMyPet) throws UserNotFoundException
+	{
    
     	List<AdEntity> allAds;
+		List<Long> userWishlist = new ArrayList<>();
     	List<AdEntity> filteredAds = new ArrayList<AdEntity>();
     	List<AdBean> result = new ArrayList<AdBean>();
 		UserEntity user = null;
@@ -176,15 +178,22 @@ public class AdResource {
         	if (user == null) {
         		throw new UserNotFoundException();
         	}
-        	
-        	// get all ads for user
-    		allAds = adRepository.findByuserEntity(user);
-    	} else {
-    		// get all ads
-    		allAds = adRepository.findAll();
-    	}
-    	
-    	filteredAds.addAll(allAds);
+
+			List<WishlistEntity> wishlist = wishlistRepository.findByUserId(userId);
+			// Map to extract adId from WishlistEntity
+			userWishlist.addAll(wishlist.stream().map(WishlistEntity::getAdId).collect(Collectors.toList()));
+		}
+
+		if (user != null && isMyPet) {
+			// get all ads for user
+			allAds = adRepository.findByuserEntity(user);
+		} else {
+			// get all ads
+			allAds = adRepository.findAll();
+		}
+
+
+		filteredAds.addAll(allAds);
 		
 		// filter ads by parameters
 		for (AdEntity adEntity : allAds) {
@@ -217,18 +226,15 @@ public class AdResource {
 				filteredAds.remove(adEntity);
 				continue;
 			}
-			if (inWishList && user != null) {
-				WishlistEntity wishlistEntity =
-						wishlistRepository.findByUserIdAndAdId(user.getId(), adEntity.getId());
-				if (wishlistEntity == null) {
-					filteredAds.remove(adEntity);
-				}
+			if (inWishList && user != null && !userWishlist.contains(adEntity.getId())) {
+				filteredAds.remove(adEntity);
 			}
 		}
 		
 		// convert all filtered ads to AdBean objects
 		for (AdEntity adEntity : filteredAds) {
 			AdBean adBean = new AdBean(adEntity);
+			adBean.setIsInWishlist(userWishlist.contains(adEntity.getId()));
 			result.add(adBean);
 		}
 		

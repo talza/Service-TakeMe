@@ -14,7 +14,7 @@ public class AdBean {
 	private Integer petType;
 	private String petPhotoUrl;
 	private String petDescription;
-	private boolean isWishInist;
+	private boolean isInWishlist;
 	private OwnerBean petOwner;
 
 	public AdBean() {
@@ -115,12 +115,12 @@ public class AdBean {
 		this.petDescription = petDescription;
 	}
 
-	public boolean isWishInist() {
-		return isWishInist;
+	public boolean isInWishlist() {
+		return isInWishlist;
 	}
 
-	public void setWishInist(boolean isWishInist) {
-		this.isWishInist = isWishInist;
+	public void setIsInWishlist(boolean isInWishlist) {
+		this.isInWishlist = isInWishlist;
 	}
 
 	public OwnerBean getPetOwner() {
