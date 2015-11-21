@@ -119,7 +119,7 @@ public class AdBean {
 		return isInWishlist;
 	}
 
-	public void setInWishlist(boolean isInWishlist) {
+	public void setIsInWishlist(boolean isInWishlist) {
 		this.isInWishlist = isInWishlist;
 	}
 

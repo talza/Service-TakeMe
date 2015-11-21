@@ -101,17 +101,16 @@ public class AdResource {
     	
 		// get the ad
 		AdEntity ad = adRepository.findOne(id);
-		
 		if (ad == null){
 			throw new AdNotFoundException();
 		}
-		
-		// check validation
-		if (ad.getUserEntity() == null || !userId.equals(ad.getUserEntity().getId())){
-			throw new UserUnauthorizedException();
-		}
-		
-		return new AdBean(ad);
+
+		boolean isInWishlist = wishlistRepository.findByUserIdAndAdId(userId, ad.getId()) != null;
+
+		AdBean adBean = new AdBean(ad);
+		adBean.setIsInWishlist(isInWishlist);
+
+		return adBean;
 	}
 		
 	@RequestMapping(value="/{id}", 
@@ -235,7 +234,7 @@ public class AdResource {
 		// convert all filtered ads to AdBean objects
 		for (AdEntity adEntity : filteredAds) {
 			AdBean adBean = new AdBean(adEntity);
-			adBean.setInWishlist(userWishlist.contains(adEntity.getId()));
+			adBean.setIsInWishlist(userWishlist.contains(adEntity.getId()));
 			result.add(adBean);
 		}
 		
