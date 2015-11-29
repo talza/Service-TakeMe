@@ -24,6 +24,7 @@ public class UserEntity extends BaseEntity<Long>
 	String email;
 	
 	String facebookToken;
+	String registrationDeviceKey;
 	
 	@OneToOne(mappedBy="userEntity")
 	TokenEntity tokenEntity;
@@ -82,5 +83,14 @@ public class UserEntity extends BaseEntity<Long>
 	public void setFacebookToken(String facebookToken) {
 		this.facebookToken = facebookToken;
 	}
+
+	public String getRegistrationDeviceKey() {
+		return registrationDeviceKey;
+	}
+
+	public void setRegistrationDeviceKey(String registrationDeviceKey) {
+		this.registrationDeviceKey = registrationDeviceKey;
+	}
+	
 
 }

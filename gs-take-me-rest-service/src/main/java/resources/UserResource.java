@@ -19,6 +19,13 @@ import repositories.AdRepository;
 import repositories.UserRepository;
 import repositories.WishlistRepository;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -174,6 +181,13 @@ public class UserResource
 
 		if (wishlistRepository.save(wishlistEntity) != null) {
 			response.put("success", "Ad was added successfully to your wishlist.");
+			
+			// send push notification 
+			try {
+				sendAndroidPushNotification(getPushNotificationRequestString(ad.getPetEntity().getName(), ad.getUserEntity().getRegistrationDeviceKey()));
+			} catch (IOException e) {
+				// do nothing.
+			}
 		} else {
 			Map<String, String> error = new HashMap<>();
 			error.put("message", "Unable to add the ad to your wishlist.");
@@ -206,5 +220,57 @@ public class UserResource
 		}
 
 		return response;
+	}
+	
+	private String sendAndroidPushNotification(String pushReq) throws IOException {
+
+        URL url;
+        HttpURLConnection connection = null;
+
+        //create a connection
+        url = new URL("https://android.googleapis.com/gcm/send");
+        connection = (HttpURLConnection)url.openConnection();
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type","application/json;charset=UTF-8");
+        connection.setRequestProperty("Content-Length", "" + Integer.toString(pushReq.getBytes("UTF-8").length));
+        connection.setRequestProperty("Authorization", "key=AIzaSyBztI_Lgbxs7q58RxN1g_7uR6etmLfJQjo");
+
+        connection.setUseCaches (false);
+        connection.setDoInput(true);
+        connection.setDoOutput(true);
+
+        // send request
+        DataOutputStream wr = new DataOutputStream (
+                connection.getOutputStream ());
+        wr.write(pushReq.getBytes("UTF-8"));
+        wr.flush ();
+        wr.close ();
+
+        // get Response
+        InputStream is = connection.getInputStream();
+        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+        String line;
+        StringBuffer response = new StringBuffer();
+        while((line = rd.readLine()) != null) {
+            response.append(line);
+            response.append('\r');
+        }
+        rd.close();
+
+        return response.toString();
+	}
+	
+	private String getPushNotificationRequestString(String petName, String deviceToNotify){
+		StringBuffer buf = new StringBuffer("{");
+		buf.append("\"data\"").append(":").append("{");
+		buf.append("\"title\"").append(":").append("\"Take Me:\"").append(",");
+		buf.append("\"message\"").append(":").append("\"Someone likes your ").append(petName).append("\"");
+		buf.append("},");
+		buf.append("\"registration_ids\"").append(":");
+		buf.append("[").append("\"").append(deviceToNotify).append("\"").append("]");
+		buf.append("}");
+		
+		return buf.toString();
+  
 	}
  }
