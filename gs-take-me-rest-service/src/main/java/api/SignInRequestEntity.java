@@ -4,6 +4,7 @@ public class SignInRequestEntity
 {
 	String email;
 	String password;
+	String registrationDeviceKey;
 	
 	public String getEmail() {
 		return email;
@@ -17,5 +18,10 @@ public class SignInRequestEntity
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+	public String getRegistrationDeviceKey() {
+		return registrationDeviceKey;
+	}
+	public void setRegistrationDeviceKey(String registrationDeviceKey) {
+		this.registrationDeviceKey = registrationDeviceKey;
+	}
 }

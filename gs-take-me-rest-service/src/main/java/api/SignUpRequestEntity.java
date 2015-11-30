@@ -9,6 +9,7 @@ public class SignUpRequestEntity
 	private String password;
 	
 	private String facebookToken;
+	String registrationDeviceKey;
 
 	public String getFirstName() {
 		return firstName;
@@ -45,5 +46,11 @@ public class SignUpRequestEntity
 	}
 	public void setFacebookToken(String facebookToken) {
 		this.facebookToken = facebookToken;
+	}
+	public String getRegistrationDeviceKey() {
+		return registrationDeviceKey;
+	}
+	public void setRegistrationDeviceKey(String registrationDeviceKey) {
+		this.registrationDeviceKey = registrationDeviceKey;
 	}
 }

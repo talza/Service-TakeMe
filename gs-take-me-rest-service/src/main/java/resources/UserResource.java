@@ -56,6 +56,9 @@ public class UserResource
     	if (user == null || !user.getPassword().equals(signInRequestEntity.getPassword())) {
     		throw new UserUnauthorizedException();
     	} else {
+    		// register user's device
+    		user.setRegistrationDeviceKey(signInRequestEntity.getRegistrationDeviceKey());
+    		userRepository.save(user);
     		return new TokenResponseBean(user.getId());
     	}
 	}
@@ -79,6 +82,7 @@ public class UserResource
     		user.setPhoneNumber(entity.getPhoneNumber());
     		user.setPassword(entity.getPassword());
     		user.setFacebookToken(entity.getFacebookToken());
+    		user.setRegistrationDeviceKey(entity.getRegistrationDeviceKey());
     		return new TokenResponseBean((userRepository.save(user)).getId());
     	}
     }
@@ -95,6 +99,7 @@ public class UserResource
     	if (user != null){
     		// update facebook token
     		user.setFacebookToken(entity.getFacebookToken());
+    		user.setRegistrationDeviceKey(entity.getRegistrationDeviceKey());
     		userRepository.save(user);
     		return new TokenResponseBean(user.getId());
     	} else {
