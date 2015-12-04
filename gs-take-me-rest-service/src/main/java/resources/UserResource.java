@@ -142,14 +142,4 @@ public class UserResource
     		throw new UserNotFoundException();
     	}
     }
-    
-    @RequestMapping(value="/Delete/{id}",
-	        method = RequestMethod.DELETE,
-	        produces = "application/json;charset=utf-8",
-	        consumes="application/json;charset=utf-8")
-    @ResponseBody
-    public void delete(@PathVariable("id") Long id)
-    {
-        userRepository.delete(id);
-    }
  }
