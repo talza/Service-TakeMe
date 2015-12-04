@@ -1,16 +1,16 @@
 package resources;
 
-import api.AddAdToWishlistRequestEntity;
 import entities.AdEntity;
 import entities.WishlistEntity;
 import exceptions.AdNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import Beans.AddAdToWishlistRequestBean;
+import Beans.SignInRequestBean;
+import Beans.SignUpRequestBean;
 import Beans.TokenResponseBean;
-import api.SignInRequestEntity;
-import api.SignUpRequestEntity;
-import api.UpdateUserRequestEntity;
+import Beans.UpdateUserRequestBean;
 import entities.UserEntity;
 import exceptions.UserAlreadyExistsException;
 import exceptions.UserNotFoundException;
@@ -49,7 +49,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public TokenResponseBean signIn(@RequestBody SignInRequestEntity signInRequestEntity) throws UserUnauthorizedException
+	public TokenResponseBean signIn(@RequestBody SignInRequestBean signInRequestEntity) throws UserUnauthorizedException
 	{
     	UserEntity user = userRepository.findByEmail(signInRequestEntity.getEmail());
 
@@ -68,7 +68,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public TokenResponseBean signUp(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException
+    public TokenResponseBean signUp(@RequestBody SignUpRequestBean entity) throws UserAlreadyExistsException
     {
     	UserEntity user = userRepository.findByEmail(entity.getEmail());
 
@@ -92,7 +92,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public TokenResponseBean signViaFacebook(@RequestBody SignUpRequestEntity entity) throws UserAlreadyExistsException
+    public TokenResponseBean signViaFacebook(@RequestBody SignUpRequestBean entity) throws UserAlreadyExistsException
     {
     	UserEntity user = userRepository.findByEmail(entity.getEmail());
 
@@ -112,7 +112,7 @@ public class UserResource
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
     @ResponseBody
-    public TokenResponseBean update(@PathVariable("id") Long id, @RequestBody UpdateUserRequestEntity entity)
+    public TokenResponseBean update(@PathVariable("id") Long id, @RequestBody UpdateUserRequestBean entity)
     {
     	UserEntity user = userRepository.findOne(id);
     	user.setFirstName(entity.getFirstName());
@@ -167,7 +167,7 @@ public class UserResource
 			produces = "application/json;charset=utf-8",
 			consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public Map<String, Object> addAdToWishlist(@PathVariable("user_id") Long userId, @RequestBody AddAdToWishlistRequestEntity requestEntity) throws UserNotFoundException, AdNotFoundException {
+	public Map<String, Object> addAdToWishlist(@PathVariable("user_id") Long userId, @RequestBody AddAdToWishlistRequestBean requestEntity) throws UserNotFoundException, AdNotFoundException {
 		Map<String, Object> response = new HashMap<>();
 
 		UserEntity user = userRepository.findOne(userId);

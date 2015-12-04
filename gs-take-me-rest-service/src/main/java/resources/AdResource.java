@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import Beans.AdBean;
+import Beans.CreateAdRequestBean;
 import Beans.ResponseBean;
-import api.CreateAdRequestEntity;
-import api.UpdateAdRequestEntity;
+import Beans.UpdateAdRequestBean;
 import entities.AdEntity;
 import entities.PetEntity;
 import entities.UserEntity;
@@ -50,7 +50,7 @@ public class AdResource {
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public ResponseBean createAdd(@RequestBody CreateAdRequestEntity request,
+	public ResponseBean createAdd(@RequestBody CreateAdRequestBean request,
 			@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException 
 	{	
     	UserEntity user = userRepository.findOne(userId);
@@ -247,7 +247,7 @@ public class AdResource {
 	        produces = "application/json;charset=utf-8",
 	        consumes="application/json;charset=utf-8")
 	@ResponseBody
-	public ResponseBean updateAd(@PathVariable("id") Long id, @RequestBody UpdateAdRequestEntity request,
+	public ResponseBean updateAd(@PathVariable("id") Long id, @RequestBody UpdateAdRequestBean request,
 			@RequestParam(value ="userId", required=true) Long userId) throws UserNotFoundException, AdNotFoundException, UserUnauthorizedException 
 	{	
     	UserEntity user = userRepository.findOne(userId);
@@ -279,10 +279,6 @@ public class AdResource {
 		// create ad
 		Date now = new Date();
 		ad.setUpdatedAt(now);
-		
-		// bind ad and pet
-//		pet.setAdEntity(ad);
-//		ad.setPetEntity(pet);
 		
 		//save data
 		petRepository.save(pet);

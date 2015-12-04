@@ -26,9 +26,6 @@ public class UserEntity extends BaseEntity<Long>
 	String facebookToken;
 	String registrationDeviceKey;
 	
-	@OneToOne(mappedBy="userEntity")
-	TokenEntity tokenEntity;
-	
 	@OneToMany(mappedBy="userEntity", fetch=FetchType.LAZY)
 	Set<AdEntity> ads;
 	

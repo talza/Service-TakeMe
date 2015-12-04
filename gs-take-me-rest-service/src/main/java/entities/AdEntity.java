@@ -1,14 +1,11 @@
 package entities;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -24,13 +21,6 @@ public class AdEntity extends BaseEntity<Long> {
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="user_id")
 	UserEntity userEntity;
-
-//	TODO: Consider remove
-//	@ManyToMany(fetch=FetchType.LAZY)
-//	@JoinTable(name="wishlists",
-//		      joinColumns={@JoinColumn(name="ad_id", referencedColumnName="id")},
-//		      inverseJoinColumns={@JoinColumn(name="user_id", referencedColumnName="id")})
-//	List<UserEntity> wishedByList = new ArrayList<>();
 	
 	Date publishedAt;
 	Date updatedAt;
