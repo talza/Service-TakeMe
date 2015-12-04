@@ -86,7 +86,4 @@ public class PetEntity extends BaseEntity<Long> {
 	public void setAdEntity(AdEntity adEntity) {
 		this.adEntity = adEntity;
 	}
-	
-	
-
 }

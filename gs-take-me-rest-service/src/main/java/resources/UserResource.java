@@ -158,7 +158,6 @@ public class UserResource
     @ResponseBody
     public void delete(@PathVariable("id") Long id)
     {
-//        userRepository.delete(entity);
         userRepository.delete(id);
     }
     
@@ -232,7 +231,7 @@ public class UserResource
         URL url;
         HttpURLConnection connection = null;
 
-        //create a connection
+        // create a connection
         url = new URL("https://android.googleapis.com/gcm/send");
         connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("POST");

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class UserUnauthorizedException extends Exception{
 
 	public UserUnauthorizedException() {
-		// TODO Auto-generated constructor stub
 	}
 
 }
